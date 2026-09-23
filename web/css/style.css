@@ -1,0 +1,594 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 22 may 2026, 15:27:25
+    Author     : thapelo
+*/
+
+/* ================= GROOT CLOTHING STYLES ================= */
+
+:root {
+    --groot-primary: #1a1a1a;
+    --groot-accent: #e63946;
+    --groot-gold: #f4a261;
+    --groot-light: #f8f9fa;
+    --groot-gray: #6c757d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fafafa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+    background: var(--groot-primary);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .logo {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 800;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.navbar .logo span {
+    color: var(--groot-accent);
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.navbar ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.navbar ul li a:hover {
+    color: var(--groot-gold);
+}
+
+.navbar .btn-nav {
+    background: var(--groot-accent);
+    padding: 8px 20px;
+    border-radius: 5px;
+    color: #fff;
+    transition: background 0.3s;
+}
+
+.navbar .btn-nav:hover {
+    background: #b52f3c;
+    color: #fff;
+}
+
+.navbar .badge {
+    background: var(--groot-accent);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+/* ================= HERO ================= */
+.hero {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #fff;
+    padding: 100px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="50" font-size="80" opacity="0.03" text-anchor="middle" dominant-baseline="middle">GROOT</text></svg>') center/cover;
+    pointer-events: none;
+}
+
+.hero h1 {
+    font-size: 56px;
+    margin-bottom: 20px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    position: relative;
+}
+
+.hero h1 .accent {
+    color: var(--groot-accent);
+}
+
+.hero p {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    position: relative;
+}
+
+.hero .btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    position: relative;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 36px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background: var(--groot-accent);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #b52f3c;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(230,57,70,0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.btn-outline:hover {
+    background: #fff;
+    color: var(--groot-primary);
+}
+
+.btn-gold {
+    background: var(--groot-gold);
+    color: #fff;
+}
+
+.btn-gold:hover {
+    background: #e08e4b;
+}
+
+/* ================= SECTIONS ================= */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-title h2 {
+    font-size: 38px;
+    color: var(--groot-primary);
+    margin-bottom: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.section-title .divider {
+    width: 80px;
+    height: 4px;
+    background: var(--groot-accent);
+    margin: 0 auto;
+}
+
+/* ================= PRODUCT GRID ================= */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.product-card .image-wrap {
+    width: 100%;
+    height: 300px;
+    background: #f0f0f0;
+    overflow: hidden;
+    position: relative;
+}
+
+.product-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+}
+
+.product-card:hover img {
+    transform: scale(1.08);
+}
+
+.product-card .info {
+    padding: 20px;
+}
+
+.product-card h3 {
+    font-size: 17px;
+    color: var(--groot-primary);
+    margin-bottom: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-card .price {
+    color: var(--groot-accent);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.product-card .price .old-price {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 15px;
+    margin-left: 8px;
+    font-weight: 400;
+}
+
+.badge-featured {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--groot-gold);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* ================= EVENTS ================= */
+.event-card {
+    display: flex;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.event-card .event-image {
+    width: 40%;
+    min-height: 250px;
+    background: #eee;
+    overflow: hidden;
+}
+
+.event-card .event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-card .event-info {
+    padding: 30px;
+    flex: 1;
+}
+
+.event-card h3 {
+    font-size: 26px;
+    color: var(--groot-primary);
+    margin-bottom: 15px;
+}
+
+.event-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: var(--groot-gray);
+}
+
+.event-meta i {
+    color: var(--groot-accent);
+    margin-right: 6px;
+}
+
+.event-card p {
+    color: #555;
+    line-height: 1.7;
+}
+
+/* ================= FORMS ================= */
+.form-container {
+    max-width: 500px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--groot-primary);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--groot-accent);
+}
+
+.form-container .btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+}
+
+.alert {
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-error {
+    background: #fee;
+    color: #c33;
+    border-left: 4px solid #c33;
+}
+
+.alert-success {
+    background: #efe;
+    color: #2a7;
+    border-left: 4px solid #2a7;
+}
+
+.alert-info {
+    background: #eef;
+    color: #248;
+    border-left: 4px solid #248;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+    background: var(--groot-primary);
+    color: #fff;
+    padding: 50px 20px 20px;
+    margin-top: 60px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.footer h4 {
+    color: var(--groot-gold);
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.footer p, .footer a {
+    color: #ccc;
+    line-height: 1.8;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer a:hover {
+    color: var(--groot-gold);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 13px;
+}
+
+/* ================= TABLES ================= */
+.table {
+    width: 100%;
+    background: #fff;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.table th {
+    background: var(--groot-primary);
+    color: #fff;
+    padding: 14px;
+    text-align: left;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.table td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.table tr:hover {
+    background: #f9f9f9;
+}
+
+/* ================= ADMIN ================= */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    background: var(--groot-primary);
+    color: #fff;
+    padding: 30px 0;
+}
+
+.admin-sidebar h3 {
+    padding: 0 25px;
+    margin-bottom: 30px;
+    font-size: 22px;
+    letter-spacing: 2px;
+}
+
+.admin-sidebar a {
+    display: block;
+    padding: 14px 25px;
+    color: #ccc;
+    text-decoration: none;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.admin-sidebar a:hover,
+.admin-sidebar a.active {
+    background: #2d2d2d;
+    color: #fff;
+    border-left-color: var(--groot-accent);
+}
+
+.admin-main {
+    flex: 1;
+    padding: 40px;
+    background: #f5f5f5;
+}
+
+.stat-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-left: 5px solid var(--groot-accent);
+}
+
+.stat-card h3 {
+    font-size: 36px;
+    color: var(--groot-primary);
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    color: var(--groot-gray);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+    
+    .navbar ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .hero h1 { font-size: 36px; }
+    .hero p { font-size: 16px; }
+    
+    .event-card { flex-direction: column; }
+    .event-card .event-image { width: 100%; height: 200px; }
+    
+    .admin-layout { flex-direction: column; }
+    .admin-sidebar { width: 100%; }
+}

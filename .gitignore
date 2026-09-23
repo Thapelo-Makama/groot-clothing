@@ -1,0 +1,23 @@
+# Build artifacts
+build/
+dist/
+nbproject/private/
+
+# Compiled files
+*.class
+*.war
+
+# IDE
+.idea/
+nbproject/private/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets — never commit these!
+setenv.sh
+*.env
+.env
+secrets.properties

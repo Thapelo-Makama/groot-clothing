@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+             version="2.2">
+
+    <persistence-unit name="GrootPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+        <class>groot.entity.User</class>
+        <class>groot.entity.Product</class>
+        <class>groot.entity.ProductImage</class>
+        <class>groot.entity.Category</class>
+        <class>groot.entity.Event</class>
+        <class>groot.entity.EventPhoto</class>
+        <class>groot.entity.Order</class>
+        <class>groot.entity.OrderItem</class>
+        <class>groot.entity.Message</class>
+        <class>groot.entity.Notification</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.driver"
+                      value="com.mysql.cj.jdbc.Driver"/>
+
+            <!-- Credentials are injected at runtime from environment variables -->
+            <!-- See JPAUtil.java for the override logic -->
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://NOT_CONFIGURED"/>
+            <property name="javax.persistence.jdbc.user"
+                      value="NOT_CONFIGURED"/>
+            <property name="javax.persistence.jdbc.password"
+                      value="NOT_CONFIGURED"/>
+
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.ddl-generation" value="none"/>
+            <property name="eclipselink.target-database" value="MySQL"/>
+            <property name="eclipselink.weaving" value="static"/>
+        </properties>
+    </persistence-unit>
+</persistence>
