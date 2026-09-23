@@ -5,7 +5,6 @@ nbproject/private/
 
 # Compiled files
 *.class
-*.war
 
 # IDE
 .idea/
