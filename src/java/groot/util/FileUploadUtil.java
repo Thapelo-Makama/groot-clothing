@@ -14,43 +14,41 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 /**
+ * Portable file upload utility. Detects the runtime environment and writes
+ * uploads into the correct webapp folder so files can be served immediately.
+ *
+ * Local dev (NetBeans context):  /home/thapelo/NetBeansProjects/GrootClothing/build/web/uploads
+ * Local Tomcat  (GrootClothing): /home/thapelo/tomcat10/webapps/GrootClothing/uploads
+ * Render (Docker ROOT deploy):   /usr/local/tomcat/webapps/ROOT/uploads
  *
  * @author thapelo
  */
 public class FileUploadUtil {
 
-    /**
-     * Resolves the /uploads folder inside the deployed web application.
-     * Since Tomcat's context points docBase at build/web, we write directly
-     * into build/web/uploads so images are served at:
-     *   http://localhost:8080/GrootClothing/uploads/products/xyz.jpg
-     */
     public static String getUploadDir() {
-        // Primary: write into the app's build folder (Tomcat's docBase)
-        String buildWebPath = "/home/thapelo/NetBeansProjects/GrootClothing/build/web/uploads";
-
-        // Fallback: write into catalina.base/webapps/GrootClothing/uploads
         String catalinaBase = System.getProperty("catalina.base");
+
+        // ---- Production (Render / Docker) ----
         if (catalinaBase != null) {
-            File buildDir = new File(buildWebPath);
-            if (buildDir.getParentFile() != null && buildDir.getParentFile().exists()) {
-                return buildWebPath;
+            // Render deploys as ROOT.war → webapps/ROOT/
+            File rootWebapp = new File(catalinaBase, 
+                "webapps" + File.separator + "ROOT");
+            if (rootWebapp.exists() && rootWebapp.isDirectory()) {
+                return rootWebapp.getAbsolutePath() + File.separator + "uploads";
             }
-            return catalinaBase + File.separator + "webapps"
-                 + File.separator + "GrootClothing"
-                 + File.separator + "uploads";
+
+            // Local Tomcat with NetBeans context → webapps/GrootClothing/
+            File gcWebapp = new File(catalinaBase, 
+                "webapps" + File.separator + "GrootClothing");
+            if (gcWebapp.exists() && gcWebapp.isDirectory()) {
+                return gcWebapp.getAbsolutePath() + File.separator + "uploads";
+            }
         }
 
-        // Final fallback: current working directory
-        return System.getProperty("user.dir") + File.separator + "uploads";
+        // ---- Local development fallback (NetBeans docBase points here) ----
+        return "/home/thapelo/NetBeansProjects/GrootClothing/build/web/uploads";
     }
 
-    /**
-     * Saves an uploaded file into the app's /uploads/<subFolder>/ directory.
-     * Returns a relative path like "/uploads/products/abc123.jpg"
-     * which can be used directly in JSP as:
-     *   src="${pageContext.request.contextPath}/uploads/products/abc123.jpg"
-     */
     public static String saveUploadedFile(Part filePart, String subFolder) throws IOException {
         if (filePart == null || filePart.getSize() == 0) return null;
 
@@ -80,16 +78,13 @@ public class FileUploadUtil {
             Files.copy(input, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
 
-        // Return the relative path used in JSP: <img src="${pageContext.request.contextPath}/uploads/...">
+        // Relative path used in JSP: <img src="${pageContext.request.contextPath}/uploads/...">
         if (subFolder != null && !subFolder.isEmpty()) {
             return "/uploads/" + subFolder + "/" + uniqueName;
         }
         return "/uploads/" + uniqueName;
     }
 
-    /**
-     * Deletes an uploaded file by its stored relative path.
-     */
     public static void deleteUploadedFile(String relativePath) {
         if (relativePath == null || relativePath.isEmpty()) return;
 
