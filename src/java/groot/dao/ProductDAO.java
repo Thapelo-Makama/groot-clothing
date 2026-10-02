@@ -12,10 +12,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 /**
+ * Product DAO — forces image loading for all list queries so the shop grid
+ * can display product thumbnails.
  *
  * @author thapelo
  */
-
 public class ProductDAO {
 
     public Product save(Product p) {
@@ -71,16 +72,27 @@ public class ProductDAO {
         }
     }
 
-    // --- JOIN FETCH images so shop grid renders them ---
+    /**
+     * Forces image initialization while the EntityManager is still open.
+     * This is crucial — without it, EclipseLink returns products with
+     * detached, unloaded image collections, causing "No Image" placeholders.
+     */
+    private void initImages(List<Product> products) {
+        for (Product p : products) {
+            if (p.getImages() != null) {
+                p.getImages().size();
+            }
+        }
+    }
+
     public List<Product> findAllActive() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery(
-                "SELECT DISTINCT p FROM Product p "
-                + "LEFT JOIN FETCH p.images "
-                + "WHERE p.isActive = true "
-                + "ORDER BY p.createdAt DESC",
+            List<Product> products = em.createQuery(
+                "SELECT p FROM Product p WHERE p.isActive = true ORDER BY p.createdAt DESC",
                 Product.class).getResultList();
+            initImages(products);
+            return products;
         } finally {
             em.close();
         }
@@ -89,11 +101,11 @@ public class ProductDAO {
     public List<Product> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery(
-                "SELECT DISTINCT p FROM Product p "
-                + "LEFT JOIN FETCH p.images "
-                + "ORDER BY p.createdAt DESC",
-                Product.class).getResultList();
+            List<Product> products = em.createQuery(
+                "SELECT p FROM Product p ORDER BY p.createdAt DESC", Product.class)
+                .getResultList();
+            initImages(products);
+            return products;
         } finally {
             em.close();
         }
@@ -103,13 +115,12 @@ public class ProductDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             TypedQuery<Product> q = em.createQuery(
-                "SELECT DISTINCT p FROM Product p "
-                + "LEFT JOIN FETCH p.images "
-                + "WHERE p.category.id = :cid AND p.isActive = true "
-                + "ORDER BY p.createdAt DESC",
+                "SELECT p FROM Product p WHERE p.category.id = :cid AND p.isActive = true ORDER BY p.createdAt DESC",
                 Product.class);
             q.setParameter("cid", categoryId);
-            return q.getResultList();
+            List<Product> products = q.getResultList();
+            initImages(products);
+            return products;
         } finally {
             em.close();
         }
@@ -118,12 +129,11 @@ public class ProductDAO {
     public List<Product> findFeatured() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
-            return em.createQuery(
-                "SELECT DISTINCT p FROM Product p "
-                + "LEFT JOIN FETCH p.images "
-                + "WHERE p.isFeatured = true AND p.isActive = true "
-                + "ORDER BY p.createdAt DESC",
+            List<Product> products = em.createQuery(
+                "SELECT p FROM Product p WHERE p.isFeatured = true AND p.isActive = true ORDER BY p.createdAt DESC",
                 Product.class).setMaxResults(8).getResultList();
+            initImages(products);
+            return products;
         } finally {
             em.close();
         }
@@ -133,13 +143,12 @@ public class ProductDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             TypedQuery<Product> q = em.createQuery(
-                "SELECT DISTINCT p FROM Product p "
-                + "LEFT JOIN FETCH p.images "
-                + "WHERE LOWER(p.name) LIKE :kw AND p.isActive = true "
-                + "ORDER BY p.createdAt DESC",
+                "SELECT p FROM Product p WHERE LOWER(p.name) LIKE :kw AND p.isActive = true ORDER BY p.createdAt DESC",
                 Product.class);
             q.setParameter("kw", "%" + keyword.toLowerCase() + "%");
-            return q.getResultList();
+            List<Product> products = q.getResultList();
+            initImages(products);
+            return products;
         } finally {
             em.close();
         }

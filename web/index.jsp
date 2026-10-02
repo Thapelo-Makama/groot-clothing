@@ -57,6 +57,8 @@
         </p>
     </div>
 
+    <jsp:include page="/home-ai.jsp" />
+
     <footer class="footer">
         <div class="footer-content">
             <div>
