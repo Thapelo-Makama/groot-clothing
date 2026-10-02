@@ -16,7 +16,6 @@ import javax.persistence.TypedQuery;
  * @author thapelo
  */
 
-
 public class ProductDAO {
 
     public Product save(Product p) {
@@ -72,11 +71,15 @@ public class ProductDAO {
         }
     }
 
+    // --- JOIN FETCH images so shop grid renders them ---
     public List<Product> findAllActive() {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery(
-                "SELECT p FROM Product p WHERE p.isActive = true ORDER BY p.createdAt DESC",
+                "SELECT DISTINCT p FROM Product p "
+                + "LEFT JOIN FETCH p.images "
+                + "WHERE p.isActive = true "
+                + "ORDER BY p.createdAt DESC",
                 Product.class).getResultList();
         } finally {
             em.close();
@@ -87,8 +90,10 @@ public class ProductDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery(
-                "SELECT p FROM Product p ORDER BY p.createdAt DESC", Product.class)
-                .getResultList();
+                "SELECT DISTINCT p FROM Product p "
+                + "LEFT JOIN FETCH p.images "
+                + "ORDER BY p.createdAt DESC",
+                Product.class).getResultList();
         } finally {
             em.close();
         }
@@ -98,7 +103,10 @@ public class ProductDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             TypedQuery<Product> q = em.createQuery(
-                "SELECT p FROM Product p WHERE p.category.id = :cid AND p.isActive = true ORDER BY p.createdAt DESC",
+                "SELECT DISTINCT p FROM Product p "
+                + "LEFT JOIN FETCH p.images "
+                + "WHERE p.category.id = :cid AND p.isActive = true "
+                + "ORDER BY p.createdAt DESC",
                 Product.class);
             q.setParameter("cid", categoryId);
             return q.getResultList();
@@ -111,7 +119,10 @@ public class ProductDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery(
-                "SELECT p FROM Product p WHERE p.isFeatured = true AND p.isActive = true ORDER BY p.createdAt DESC",
+                "SELECT DISTINCT p FROM Product p "
+                + "LEFT JOIN FETCH p.images "
+                + "WHERE p.isFeatured = true AND p.isActive = true "
+                + "ORDER BY p.createdAt DESC",
                 Product.class).setMaxResults(8).getResultList();
         } finally {
             em.close();
@@ -122,7 +133,10 @@ public class ProductDAO {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             TypedQuery<Product> q = em.createQuery(
-                "SELECT p FROM Product p WHERE LOWER(p.name) LIKE :kw AND p.isActive = true ORDER BY p.createdAt DESC",
+                "SELECT DISTINCT p FROM Product p "
+                + "LEFT JOIN FETCH p.images "
+                + "WHERE LOWER(p.name) LIKE :kw AND p.isActive = true "
+                + "ORDER BY p.createdAt DESC",
                 Product.class);
             q.setParameter("kw", "%" + keyword.toLowerCase() + "%");
             return q.getResultList();
