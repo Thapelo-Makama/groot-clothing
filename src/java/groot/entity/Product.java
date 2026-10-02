@@ -4,6 +4,7 @@
  */
 package groot.entity;
 
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -101,12 +102,61 @@ public class Product implements Serializable {
     public void setImages(List<ProductImage> images) { this.images = images; }
 
     public String getPrimaryImage() {
-        if (images != null && !images.isEmpty()) {
-            for (ProductImage img : images) {
-                if (Boolean.TRUE.equals(img.getIsPrimary())) return img.getImagePath();
-            }
-            return images.get(0).getImagePath();
+        if (images == null || images.isEmpty()) {
+            return "placeholder.jpg";
         }
-        return "placeholder.jpg";
+
+        // Find primary image, else fall back to first
+        String candidate = null;
+        for (ProductImage img : images) {
+            if (Boolean.TRUE.equals(img.getIsPrimary())) {
+                candidate = img.getImagePath();
+                break;
+            }
+        }
+        if (candidate == null) {
+            candidate = images.get(0).getImagePath();
+        }
+
+        if (candidate == null || candidate.isEmpty()) {
+            return "placeholder.jpg";
+        }
+
+        // Check if file actually exists on disk
+        try {
+            String relative = candidate.replaceFirst("^/uploads/", "");
+            String catalinaBase = System.getProperty("catalina.base");
+
+            if (catalinaBase != null) {
+                // Production: Render ROOT.war
+                File rootFile = new File(catalinaBase,
+                    "webapps" + File.separator + "ROOT" + File.separator + "uploads"
+                    + File.separator + relative);
+                if (rootFile.exists()) {
+                    return candidate;
+                }
+
+                // Local Tomcat: GrootClothing context
+                File gcFile = new File(catalinaBase,
+                    "webapps" + File.separator + "GrootClothing" + File.separator + "uploads"
+                    + File.separator + relative);
+                if (gcFile.exists()) {
+                    return candidate;
+                }
+
+                return "placeholder.jpg";
+            }
+
+            // NetBeans context: build/web/uploads
+            File buildFile = new File(
+                "/home/thapelo/NetBeansProjects/GrootClothing/build/web" + candidate);
+            if (buildFile.exists()) {
+                return candidate;
+            }
+
+            return "placeholder.jpg";
+        } catch (Exception e) {
+            return "placeholder.jpg";
+        }
     }
 }
