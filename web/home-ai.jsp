@@ -1,5 +1,6 @@
 <%-- 
     AI Assistant Section — included in index.jsp
+    Note: JavaScript template literals use \${} to escape from JSP EL
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
@@ -37,50 +38,52 @@
 </section>
 
 <script>
+// <![CDATA[
 async function grootSend(e) {
     e.preventDefault();
-    const input = document.getElementById('ai-input');
-    const chat = document.getElementById('chat-window');
-    const msg = input.value.trim();
+    var input = document.getElementById('ai-input');
+    var chat = document.getElementById('chat-window');
+    var msg = input.value.trim();
     if (!msg) return;
 
-    chat.innerHTML += `<div style="text-align:right; margin-bottom:14px;">
-        <div style="display:inline-block; background:#1a1a1a; color:#fff; padding:14px 20px; border-radius:18px 18px 4px 18px; max-width:80%; text-align:left; line-height:1.6; font-size:15px;">
-            ${grootEscape(msg)}
-        </div>
-    </div>`;
+    var userBubble = '<div style="text-align:right; margin-bottom:14px;">'
+        + '<div style="display:inline-block; background:#1a1a1a; color:#fff; padding:14px 20px; border-radius:18px 18px 4px 18px; max-width:80%; text-align:left; line-height:1.6; font-size:15px;">'
+        + grootEscape(msg)
+        + '</div></div>';
+    chat.innerHTML += userBubble;
     input.value = '';
     chat.scrollTop = chat.scrollHeight;
 
-    const typingId = 'typing-' + Date.now();
-    chat.innerHTML += `<div id="${typingId}" style="background:#e63946; color:#fff; padding:14px 20px; border-radius:18px 18px 18px 4px; max-width:80%; margin-bottom:14px; font-style:italic; opacity:0.85;">
-        Groot AI is thinking...
-    </div>`;
+    var typingId = 'typing-' + Date.now();
+    chat.innerHTML += '<div id="' + typingId + '" style="background:#e63946; color:#fff; padding:14px 20px; border-radius:18px 18px 18px 4px; max-width:80%; margin-bottom:14px; font-style:italic; opacity:0.85;">'
+        + 'Groot AI is thinking...'
+        + '</div>';
     chat.scrollTop = chat.scrollHeight;
 
     try {
-        const res = await fetch('${pageContext.request.contextPath}/AiChatServlet', {
+        var res = await fetch('AiChatServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: 'message=' + encodeURIComponent(msg)
         });
-        const data = await res.text();
+        var data = await res.text();
         document.getElementById(typingId).remove();
-        chat.innerHTML += `<div style="background:#e63946; color:#fff; padding:14px 20px; border-radius:18px 18px 18px 4px; max-width:80%; margin-bottom:14px; line-height:1.6; font-size:15px; white-space:pre-line;">
-            ${grootEscape(data)}
-        </div>`;
+        chat.innerHTML += '<div style="background:#e63946; color:#fff; padding:14px 20px; border-radius:18px 18px 18px 4px; max-width:80%; margin-bottom:14px; line-height:1.6; font-size:15px; white-space:pre-line;">'
+            + grootEscape(data)
+            + '</div>';
     } catch (err) {
         document.getElementById(typingId).remove();
-        chat.innerHTML += `<div style="background:#c33; color:#fff; padding:14px 20px; border-radius:18px 18px 18px 4px; max-width:80%; margin-bottom:14px;">
-            Sorry, something went wrong. Please try again.
-        </div>`;
+        chat.innerHTML += '<div style="background:#c33; color:#fff; padding:14px 20px; border-radius:18px 18px 18px 4px; max-width:80%; margin-bottom:14px;">'
+            + 'Sorry, something went wrong. Please try again.'
+            + '</div>';
     }
     chat.scrollTop = chat.scrollHeight;
 }
 
 function grootEscape(text) {
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
+// ]]>
 </script>
